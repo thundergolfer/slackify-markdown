@@ -5,3 +5,4 @@ authors = ["Jonathon Belotti <jonathon.bel.melbourne@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+pulldown-cmark = "0.5.2"
