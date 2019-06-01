@@ -16,3 +16,8 @@ Cargo.lock
 
 /target
 #**/*.rs.bk
+
+###############
+# Intellij IDEA
+###############
+.idea
