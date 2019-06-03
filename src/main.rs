@@ -1,6 +1,8 @@
 use pulldown_cmark::{Event, Parser, Options, Tag, html};
 use std::io::{self, Read};
 
+mod slackdown;
+
 fn get_sdtin() -> io::Result<String> {
     let mut buffer = String::new();
     io::stdin().read_to_string(&mut buffer)?;
@@ -25,10 +27,10 @@ fn slackify(markdown_input: String) -> String {
     });
 
     // Write to String buffer.
-    let mut html_output = String::new();
-    html::push_html(&mut html_output, parser);
+    let mut output = String::new();
+    slackdown::push_slackdown(&mut output, parser);
 
-    html_output
+    output
 }
 
 fn main() {
