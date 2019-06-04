@@ -229,7 +229,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.write("\n<blockquote>\n")
                 }
             }
-            Tag::CodeBlock(info) => {
+            Tag::CodeBlock(_info) => {
                 if !self.end_newline {
                     self.write_newline()?;
                 }
@@ -268,7 +268,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             Tag::Emphasis => self.write("_"),
             Tag::Strong => self.write("*"),
             Tag::Strikethrough => self.write("~"),
-            Tag::Link(_link_type, dest, title) => {
+            Tag::Link(_link_type, dest, _title) => {
                 escape_href(&mut self.writer, &dest)?;
                 Ok(())
             }

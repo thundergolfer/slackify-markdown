@@ -2,7 +2,7 @@ extern crate slackify_markdown;
 
 use slackify_markdown::slackdown;
 
-use pulldown_cmark::{Event, Parser, Options, Tag};
+use pulldown_cmark::{Parser, Options};
 use std::io::{self, Read};
 
 
