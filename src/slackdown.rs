@@ -185,7 +185,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     write!(&mut self.writer, "\n<h{}>", level)
                 }
             }
-            Tag::Table(alignments) => {
+            Tag::Table(_alignments) => {
                 // TODO(Jonathon): Throw error to say this feature is unhandled
 //                self.table_alignments = alignments;
 //                self.write("<table>")
