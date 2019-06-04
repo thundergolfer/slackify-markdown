@@ -253,16 +253,16 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             }
             Tag::List(None) => {
                 if self.end_newline {
-                    self.write("<ul>\n")
+                    self.write("\n")
                 } else {
-                    self.write("\n<ul>\n")
+                    self.write("\n\n")
                 }
             }
             Tag::Item => {
                 if self.end_newline {
-                    self.write("<li>")
+                    self.write("• ")
                 } else {
-                    self.write("\n<li>")
+                    self.write("\n• ")
                 }
             }
             Tag::Emphasis => self.write("_"),
@@ -342,10 +342,10 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("</ol>\n")?;
             }
             Tag::List(None) => {
-                self.write("</ul>\n")?;
+                self.write("\n")?;
             }
             Tag::Item => {
-                self.write("</li>\n")?;
+                self.write("\n")?;
             }
             Tag::Emphasis => {
                 self.write("_")?;
