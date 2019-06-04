@@ -19,26 +19,13 @@ fn slackify(markdown_input: String) -> String {
     options.insert(Options::ENABLE_STRIKETHROUGH);
     let parser = Parser::new_ext(&markdown_input, options);
 
-    let parser = parser.map(|event| match event {
-        Event::Text(text) => Event::Text(text.replace("abbr", "abbreviation").into()),
-        Event::Start(Tag::Header(_)) => Event::Start(Tag::Strong),
-        Event::End(Tag::Header(_)) => Event::End(Tag::Strong),
-        _ => {
-            println!("{:?}", event);
-            return event;
-        }
-    });
-
     // Write to String buffer.
     let mut output = String::new();
     slackdown::push_slackdown(&mut output, parser);
-
     output
 }
 
 fn main() {
-    println!("Hello, world!");
-
     let input = get_sdtin();
     match input {
         Err(e) => println!("error receiving input: {:?}", e),

@@ -6,7 +6,7 @@ use std::fmt::{Arguments, Write as FmtWrite};
 
 use crate::escape::{escape_html, escape_href};
 
-use pulldown_cmark::{Event, CowStr, Tag, LinkType};
+use pulldown_cmark::{Event, CowStr, Tag};
 use pulldown_cmark::Event::*;
 
 struct SlackdownWriter<'a, I, W> {
@@ -173,7 +173,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             Tag::Rule => {
                 Ok(())
             }
-            Tag::Header(level) => {
+            Tag::Header(_level) => {
                 // Slack doesn't support headers, so just make bold.
                 if self.end_newline {
                     self.end_newline = false;
