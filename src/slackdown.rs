@@ -165,24 +165,21 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
         match tag {
             Tag::Paragraph => {
                 if self.end_newline {
-                    self.write("<p>")
+                    self.write("")
                 } else {
-                    self.write("\n<p>")
+                    self.write("\n")
                 }
             }
             Tag::Rule => {
-                if self.end_newline {
-                    self.write("<hr />\n")
-                } else {
-                    self.write("\n<hr />\n")
-                }
+                Ok(())
             }
             Tag::Header(level) => {
+                // Slack doesn't support headers, so just make bold.
                 if self.end_newline {
                     self.end_newline = false;
-                    write!(&mut self.writer, "<h{}>", level)
+                    self.write("*")
                 } else {
-                    write!(&mut self.writer, "\n<h{}>", level)
+                    self.write("\n*")
                 }
             }
             Tag::Table(_alignments) => {
@@ -236,14 +233,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 if !self.end_newline {
                     self.write_newline()?;
                 }
-                let lang = info.split(' ').next().unwrap();
-                if lang.is_empty() {
-                    self.write("<pre><code>")
-                } else {
-                    self.write("<pre><code class=\"language-")?;
-                    escape_html(&mut self.writer, lang)?;
-                    self.write("\">")
-                }
+                self.write("```")
             }
             Tag::List(Some(1)) => {
                 if self.end_newline {
@@ -275,26 +265,12 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.write("\n<li>")
                 }
             }
-            Tag::Emphasis => self.write("<em>"),
+            Tag::Emphasis => self.write("_"),
             Tag::Strong => self.write("*"),
-            Tag::Strikethrough => self.write("<del>"),
-            Tag::Link(LinkType::Email, dest, title) => {
-                self.write("<a href=\"mailto:")?;
-                escape_href(&mut self.writer, &dest)?;
-                if !title.is_empty() {
-                    self.write("\" title=\"")?;
-                    escape_html(&mut self.writer, &title)?;
-                }
-                self.write("\">")
-            }
+            Tag::Strikethrough => self.write("~"),
             Tag::Link(_link_type, dest, title) => {
-                self.write("<a href=\"")?;
                 escape_href(&mut self.writer, &dest)?;
-                if !title.is_empty() {
-                    self.write("\" title=\"")?;
-                    escape_html(&mut self.writer, &title)?;
-                }
-                self.write("\">")
+                Ok(())
             }
             Tag::Image(_link_type, dest, title) => {
                 self.write("<img src=\"")?;
@@ -327,13 +303,12 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
     fn end_tag(&mut self, tag: Tag) -> io::Result<()> {
         match tag {
             Tag::Paragraph => {
-                self.write("</p>\n")?;
+                self.write("\n")?;
             }
             Tag::Rule => (),
-            Tag::Header(level) => {
-                self.write("</h")?;
-                write!(&mut self.writer, "{}", level)?;
-                self.write(">\n")?;
+            Tag::Header(_level) => {
+                // Slack doesn't support headers
+                self.write("*\n")?;
             }
             Tag::Table(_) => {
                 // TODO(Jonaton): Raise error to say this is not supported
@@ -358,10 +333,10 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
 //                self.table_cell_index += 1;
             }
             Tag::BlockQuote => {
-                self.write("</blockquote>\n")?;
+                self.write("\n")?;
             }
             Tag::CodeBlock(_) => {
-                self.write("</code></pre>\n")?;
+                self.write("```\n")?;
             }
             Tag::List(Some(_)) => {
                 self.write("</ol>\n")?;
@@ -373,17 +348,15 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("</li>\n")?;
             }
             Tag::Emphasis => {
-                self.write("</em>")?;
+                self.write("_")?;
             }
             Tag::Strong => {
                 self.write("*")?;
             }
             Tag::Strikethrough => {
-                self.write("</del>")?;
+                self.write("~")?;
             }
-            Tag::Link(_, _, _) => {
-                self.write("</a>")?;
-            }
+            Tag::Link(_, _, _) => {}
             Tag::Image(_, _, _) => (), // shouldn't happen, handled in start
             Tag::FootnoteDefinition(_) => {
                 self.write("</div>\n")?;

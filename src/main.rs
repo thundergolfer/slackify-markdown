@@ -56,9 +56,25 @@ mod tests {
 
     #[test]
     fn test_header_to_bold() {
-        let input = "## This is a title".to_owned();
+        let input = "## This is a title".to_string();
         let actual = slackify(input);
         let expected = "*This is a title*";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_italics() {
+        let input = "I want some things to be *italics*".to_string();
+        let actual = slackify(input);
+        let expected = "I want some things to be _italics_\n";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_bold() {
+        let input = "Make this text **bold bold bold** please".to_string();
+        let actual = slackify(input);
+        let expected = "Make this text *bold bold bold* please\n";
         assert_eq!(actual, expected);
     }
 }
