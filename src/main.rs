@@ -1,7 +1,10 @@
-use pulldown_cmark::{Event, Parser, Options, Tag, html};
+extern crate slackify_markdown;
+
+use slackify_markdown::slackdown;
+
+use pulldown_cmark::{Event, Parser, Options, Tag};
 use std::io::{self, Read};
 
-mod slackdown;
 
 fn get_sdtin() -> io::Result<String> {
     let mut buffer = String::new();
