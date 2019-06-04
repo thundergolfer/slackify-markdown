@@ -276,7 +276,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 }
             }
             Tag::Emphasis => self.write("<em>"),
-            Tag::Strong => self.write("<strong>"),
+            Tag::Strong => self.write("*"),
             Tag::Strikethrough => self.write("<del>"),
             Tag::Link(LinkType::Email, dest, title) => {
                 self.write("<a href=\"mailto:")?;
@@ -376,7 +376,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("</em>")?;
             }
             Tag::Strong => {
-                self.write("</strong>")?;
+                self.write("*")?;
             }
             Tag::Strikethrough => {
                 self.write("</del>")?;

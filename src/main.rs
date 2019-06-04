@@ -58,7 +58,7 @@ mod tests {
     fn test_header_to_bold() {
         let input = "## This is a title".to_owned();
         let actual = slackify(input);
-        let expected = "<strong>This is a title</strong>";
+        let expected = "*This is a title*";
         assert_eq!(actual, expected);
     }
 }
