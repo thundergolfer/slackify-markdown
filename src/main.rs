@@ -17,6 +17,7 @@ fn slackify(markdown_input: String) -> String {
     // and we therefore must enable it explicitly.
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
+    options.insert(Options::ENABLE_TASKLISTS);
     let parser = Parser::new_ext(&markdown_input, options);
 
     // Write to String buffer.
@@ -70,6 +71,31 @@ mod tests {
         let input = "redacted redacted redacted `421` situation".to_string();
         let actual = slackify(input);
         let expected = "redacted redacted redacted `421` situation\n".to_string();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_list_subitem_formatting() {
+        let input = "- ⌗ redacted redacted redacted redacted redacted
+- 📅 Morning meeting with Wade about Datapipeline→Argo
+- 📅 Datalake 2.0 Planning meeting
+- 📅 D.Eng Observability meeting
+- Create JIRA epics for the goals that I own
+- Cleaning up Appsflyer *Pull* API stuff in Argo + AWS
+    - Unscheduled it in Argo, but haven't cleaned out AWS stuff yet
+- Got heads-up from redacted redacted redacted redacted  redacted  redacted
+    - redacted redacted redacted redacted redacted redacted redacted errors.".to_string();
+        let actual = slackify(input);
+        let expected = "• ⌗ redacted redacted redacted redacted redacted
+• 📅 Morning meeting with Tom&Jerry about A Thing
+• 📅 Datalake 2.0 Planning meeting
+• 📅 D.Eng Observability meeting
+• Create JIRA epics for the goals that I own
+• Cleaning up in AWS
+    • Sub-item 1
+    • Sub-item 2
+• Got heads-up from redacted redacted redacted redacted redacted redacted
+    • redacted redacted redacted redacted redacted redacted redacted errors.".to_string();
         assert_eq!(actual, expected);
     }
 }

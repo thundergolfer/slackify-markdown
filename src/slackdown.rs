@@ -22,6 +22,7 @@ struct SlackdownWriter<'a, I, W> {
 //    table_state: TableState,
 //    table_alignments: Vec<Alignment>,
 //    table_cell_index: usize,
+    unordered_list_indent_lvl: usize,
     numbers: HashMap<CowStr<'a>, usize>,
 }
 
@@ -93,6 +94,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             writer,
             end_newline: true,
             numbers: HashMap::new(),
+            unordered_list_indent_lvl: 0
         }
     }
 
@@ -123,6 +125,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.end_tag(tag)?;
                 }
                 Text(text) => {
+                    println!("text: {}", &text);
                     escape_html(&mut self.writer, &text)?;
                     self.end_newline = text.ends_with('\n');
                 }
@@ -252,17 +255,21 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("\">\n")
             }
             Tag::List(None) => {
+                let tabs = "\t".repeat(self.unordered_list_indent_lvl);
+                self.unordered_list_indent_lvl += 1;
+                println!("{}", self.unordered_list_indent_lvl);
                 if self.end_newline {
-                    self.write("\n")
+                    self.write("").unwrap();
                 } else {
-                    self.write("\n\n")
+                    self.write("\n").unwrap();
                 }
+                self.write(&tabs)
             }
             Tag::Item => {
                 if self.end_newline {
                     self.write("• ")
                 } else {
-                    self.write("\n• ")
+                    self.write("• ")
                 }
             }
             Tag::Emphasis => self.write("_"),
@@ -342,7 +349,8 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("</ol>\n")?;
             }
             Tag::List(None) => {
-                self.write("\n")?;
+                self.unordered_list_indent_lvl -= 1;
+                self.write("")?;
             }
             Tag::Item => {
                 self.write("\n")?;
