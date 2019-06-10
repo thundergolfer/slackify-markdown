@@ -77,25 +77,27 @@ mod tests {
     #[test]
     fn test_list_subitem_formatting() {
         let input = "- ⌗ redacted redacted redacted redacted redacted
-- 📅 Morning meeting with Wade about Datapipeline→Argo
+- 📅 Morning meeting with Tom and Jerry about A Thing
 - 📅 Datalake 2.0 Planning meeting
 - 📅 D.Eng Observability meeting
 - Create JIRA epics for the goals that I own
-- Cleaning up Appsflyer *Pull* API stuff in Argo + AWS
-    - Unscheduled it in Argo, but haven't cleaned out AWS stuff yet
-- Got heads-up from redacted redacted redacted redacted  redacted  redacted
+- Cleaning up in AWS
+    - Sub-item 1
+    - Sub-item 2
+- Got heads-up from redacted redacted redacted redacted redacted redacted
     - redacted redacted redacted redacted redacted redacted redacted errors.".to_string();
         let actual = slackify(input);
         let expected = "• ⌗ redacted redacted redacted redacted redacted
-• 📅 Morning meeting with Tom&Jerry about A Thing
+• 📅 Morning meeting with Tom and Jerry about A Thing
 • 📅 Datalake 2.0 Planning meeting
 • 📅 D.Eng Observability meeting
 • Create JIRA epics for the goals that I own
 • Cleaning up in AWS
     • Sub-item 1
     • Sub-item 2
+
 • Got heads-up from redacted redacted redacted redacted redacted redacted
-    • redacted redacted redacted redacted redacted redacted redacted errors.".to_string();
+    • redacted redacted redacted redacted redacted redacted redacted errors.\n\n".to_string();
         assert_eq!(actual, expected);
     }
 }

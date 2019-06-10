@@ -254,16 +254,16 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 self.write("\">\n")
             }
             Tag::List(None) => {
-                let tabs = "\t".repeat(self.unordered_list_indent_lvl);
                 self.unordered_list_indent_lvl += 1;
                 if self.end_newline {
-                    self.write("").unwrap();
+                    self.write("")
                 } else {
-                    self.write("\n").unwrap();
+                    self.write("\n")
                 }
-                self.write(&tabs)
             }
             Tag::Item => {
+                let tabs = "    ".repeat(self.unordered_list_indent_lvl-1);
+                self.write(&tabs).unwrap();
                 if self.end_newline {
                     self.write("• ")
                 } else {
