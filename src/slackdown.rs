@@ -125,7 +125,6 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.end_tag(tag)?;
                 }
                 Text(text) => {
-                    println!("text: {}", &text);
                     escape_html(&mut self.writer, &text)?;
                     self.end_newline = text.ends_with('\n');
                 }
@@ -257,7 +256,6 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             Tag::List(None) => {
                 let tabs = "\t".repeat(self.unordered_list_indent_lvl);
                 self.unordered_list_indent_lvl += 1;
-                println!("{}", self.unordered_list_indent_lvl);
                 if self.end_newline {
                     self.write("").unwrap();
                 } else {
