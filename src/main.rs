@@ -45,7 +45,7 @@ mod tests {
     fn test_header_to_bold() {
         let input = "## This is a title".to_string();
         let actual = slackify(input);
-        let expected = "*This is a title*";
+        let expected = "*This is a title*\n";
         assert_eq!(actual, expected);
     }
 
@@ -62,6 +62,14 @@ mod tests {
         let input = "Make this text **bold bold bold** please".to_string();
         let actual = slackify(input);
         let expected = "Make this text *bold bold bold* please\n";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_inline_code() {
+        let input = "redacted redacted redacted `421` situation".to_string();
+        let actual = slackify(input);
+        let expected = "redacted redacted redacted `421` situation\n".to_string();
         assert_eq!(actual, expected);
     }
 }

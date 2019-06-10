@@ -127,9 +127,9 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.end_newline = text.ends_with('\n');
                 }
                 Code(text) => {
-                    self.write("<code>")?;
+                    self.write("`")?;
                     escape_html(&mut self.writer, &text)?;
-                    self.write("</code>")?;
+                    self.write("`")?;
                 }
                 Html(html) | InlineHtml(html) => {
                     self.write(&html)?;
