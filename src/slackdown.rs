@@ -184,44 +184,8 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.write("\n*")
                 }
             }
-            Tag::Table(_alignments) => {
+            Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => {
                 // TODO(Jonathon): Throw error to say this feature is unhandled
-//                self.table_alignments = alignments;
-//                self.write("<table>")
-                Ok(())
-            }
-            Tag::TableHead => {
-//                self.table_state = TableState::Head;
-//                self.table_cell_index = 0;
-//                self.write("<thead><tr>")
-                Ok(())
-            }
-            Tag::TableRow => {
-//                self.table_cell_index = 0;
-//                self.write("<tr>")
-                Ok(())
-            }
-            Tag::TableCell => {
-//                match self.table_state {
-//                    TableState::Head => {
-//                        self.write("<th")?;
-//                    }
-//                    TableState::Body => {
-//                        self.write("<td")?;
-//                    }
-//                }
-//                match self.table_alignments.get(self.table_cell_index) {
-//                    Some(&Alignment::Left) => {
-//                        self.write(" align=\"left\">")
-//                    }
-//                    Some(&Alignment::Center) => {
-//                        self.write(" align=\"center\">")
-//                    }
-//                    Some(&Alignment::Right) => {
-//                        self.write(" align=\"right\">")
-//                    }
-//                    _ => self.write(">"),
-//                }
                 Ok(())
             }
             Tag::BlockQuote => {
@@ -316,28 +280,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 // Slack doesn't support headers
                 self.write("*\n")?;
             }
-            Tag::Table(_) => {
-                // TODO(Jonaton): Raise error to say this is not supported
-//                self.write("</tbody></table>\n")?;
-            }
-            Tag::TableHead => {
-//                self.write("</tr></thead><tbody>\n")?;
-//                self.table_state = TableState::Body;
-            }
-            Tag::TableRow => {
-//                self.write("</tr>\n")?;
-            }
-            Tag::TableCell => {
-//                match self.table_state {
-//                    TableState::Head => {
-//                        self.write("</th>")?;
-//                    }
-//                    TableState::Body => {
-//                        self.write("</td>")?;
-//                    }
-//                }
-//                self.table_cell_index += 1;
-            }
+            Tag::Table(_) | Tag::TableHead | Tag::TableRow | Tag::TableCell => {}
             Tag::BlockQuote => {
                 self.write("\n")?;
             }
@@ -366,7 +309,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             Tag::Link(_, _, _) => {}
             Tag::Image(_, _, _) => (), // shouldn't happen, handled in start
             Tag::FootnoteDefinition(_) => {
-                self.write("</div>\n")?;
+                self.write("\n")?;
             }
             Tag::HtmlBlock => {}
         }

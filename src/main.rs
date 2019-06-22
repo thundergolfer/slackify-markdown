@@ -116,4 +116,16 @@ mod tests {
     • redacted redacted redacted redacted redacted redacted redacted errors.\n\n".to_string();
         assert_eq!(actual, expected);
     }
+
+    #[test]
+    fn test_tables() {
+        let input = "The following is a table:\
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |".to_string();
+        let actual = slackify(input);
+        let expected = "Abc";
+        assert_eq!(actual, expected);
+    }
 }
