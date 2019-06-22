@@ -16,7 +16,7 @@ DEPLOY_TO_GITHUB: &DEPLOY_TO_GITHUB
     - name="slackify-markdown-$TRAVIS_TAG-$TARGET"
     - mkdir $name
     - cp target/$TARGET/release/slackify-markdown $name/
-    - cp README.md LICENSE-MIT LICENSE-APACHE $name/
+    - cp README.md LICENSE $name/
     - tar czvf $name.tar.gz $name
   deploy:
     provider: releases
