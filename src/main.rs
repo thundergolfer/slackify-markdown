@@ -13,14 +13,11 @@ fn get_sdtin() -> io::Result<String> {
 }
 
 fn slackify(markdown_input: String) -> String {
-    // Set up options and parser. Strikethroughs are not part of the CommonMark standard
-    // and we therefore must enable it explicitly.
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
     options.insert(Options::ENABLE_TASKLISTS);
     let parser = Parser::new_ext(&markdown_input, options);
 
-    // Write to String buffer.
     let mut output = String::new();
     slackdown::push_slackdown(&mut output, parser);
     output

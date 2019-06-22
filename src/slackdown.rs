@@ -19,9 +19,7 @@ struct SlackdownWriter<'a, I, W> {
     /// Whether or not the last write wrote a newline.
     end_newline: bool,
 
-//    table_state: TableState,
-//    table_alignments: Vec<Alignment>,
-//    table_cell_index: usize,
+    /// Used to properly indent sub-lists
     unordered_list_indent_lvl: usize,
     numbers: HashMap<CowStr<'a>, usize>,
 }
