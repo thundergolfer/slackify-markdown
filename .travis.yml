@@ -1,7 +1,5 @@
 language: rust
 
-GH_TOKEN: &GH_TOKEN
-  secure: "dgXa0PDF1h9fDPsOOL3K8Hbr87hx7FZDHFP3jOuQBJo/RCFCnYQo1iZzwBF5qBZpxxRjxmwXUT7TlxpsOfsCgax7arzEWJVnsH9V9MtVj+XSR0VDTLyb9cLXMMVVwlaRJKEGRvxGQR35ulhC0ZvdEMW+SWHCk59DR5HfCZ8zbZa268oci0xSTtUyxoFHYDFj4T2IMS8qr9s//wNjXPHJg4t9q8g2LNFhT94y6aNQ5tKoGSW/NbZQbZkPmBEtUWvs576KxkQhrIjZlz7Zzo2tjXcKv0CTfAfYf7VcSz5LNvfWeqW6V9QwMvVYvpcvh3lstMZdSNLs9+7KLiu0jK667eHTeBfMK79HtUX07MX8rNUPywqkqFYF4S2OO9fz2ZzzmKS/b9n3yC1DoigNzWgrSMI5TzCdE4yOrg12/3uqPczLzJmkDo5TNR5L0OP94bc/vIvcWqV2gOjCzsySTuduhCNfQ9n9Smh96Wfkn1Upak8oEg23hzawdxLRJaXIPl1pXNONNAWg71fer0sVWd4e5uGbiMtihR2/lN5mdl58vlTR0TznbRMxlj/WaP9GFOhw8VYTtxqBFuTHTnjEboY7YBqFUwBohyiesj5xu7jWdxjsLsmk3emFGaOcAGN2QS3v64DvuMw6XU4RFBOfFxaGeULq4TZ72CCY08G1lQErioQ="
 
 # Cache `cargo install`ed tools, but don't cache the project's `target`
 # directory (which ends up over-caching and filling all disk space!)
@@ -20,11 +18,11 @@ DEPLOY_TO_GITHUB: &DEPLOY_TO_GITHUB
     - tar czvf $name.tar.gz $name
   deploy:
     provider: releases
-    api_key: *GH_TOKEN
+    api_key:
+      secure: "lRbx7Ilv8+V+GW9FBOfAF5OgrwuCJYvPfk5lhbHSKdNumUecpYv0EOZSMa0mFh7ct6VJaqqqIdwpxVmys/56UeJY3bE4SY9KGb/pEcOfKBGcqFKNI0rsMyCQV1AWfG/vsA2JxeWWjFu1lyatRrvjLx9D4OAIiJRxF3iDyhAmqGQlNO6uOHusg8WGYETps7+6J3W2MeSafSOtBwoeRbHAf/F+14Qod8w2G/2gMaoJrUrwfQfWMAbU+OLnF64L4J8iXjW52gjQq5DzsEiFZmzOzUc1x6wzxG8qwwv0ja2s0E/4MftuCVTwDoEv0XNgA0n45EIxXqVqypzlQP+3wgndeffuZx6LJu1MTW6Wcudf5Q/R3AEN2u0AJ83Eu1vxe6OREC6HTeoKweajImikCVWsSFf8us2N6G1aFZAajz2PQLHNxFAXQG6mc420xtgHBrgFBlowCcaxKehoFQUfrpvjBvP6VWCo9OUW2oeuHu/K+rx2kQWmQakrvuy6uzGdZN7DVBXS4bItehBFOW+Ge0ZKdsI3E7+o7XJxt0ycIpZAtq0ZH2MCIXp7UInLj/2SqDLS1LAQBjr/7n3t6RWrIC6gNih8n6duzz3hGZFgaKvY0B8TGshvRt6FhPJz/2MlqzKHwcawvDjgq/qJwMJetPEK5Ye/M35wMbgbJ6l3hKfXPR8="
     file: slackify-markdown-$TRAVIS_TAG-$TARGET.tar.gz
     skip_cleanup: true
     on:
-      branch: master
       tags: true
 
 matrix:
