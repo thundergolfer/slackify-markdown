@@ -271,7 +271,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
     fn end_tag(&mut self, tag: Tag) -> io::Result<()> {
         match tag {
             Tag::Paragraph => {
-                self.write("\n")?;
+                self.write("")?;
             }
             Tag::Rule => (),
             Tag::Header(_level) => {

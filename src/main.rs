@@ -51,7 +51,7 @@ mod tests {
     fn test_italics() {
         let input = "I want some things to be *italics*".to_string();
         let actual = slackify(input);
-        let expected = "I want some things to be _italics_\n";
+        let expected = "I want some things to be _italics_";
         assert_eq!(actual, expected);
     }
 
@@ -59,7 +59,7 @@ mod tests {
     fn test_bold() {
         let input = "Make this text **bold bold bold** please".to_string();
         let actual = slackify(input);
-        let expected = "Make this text *bold bold bold* please\n";
+        let expected = "Make this text *bold bold bold* please";
         assert_eq!(actual, expected);
     }
 
@@ -67,7 +67,7 @@ mod tests {
     fn test_inline_code() {
         let input = "redacted redacted redacted `421` situation".to_string();
         let actual = slackify(input);
-        let expected = "redacted redacted redacted `421` situation\n".to_string();
+        let expected = "redacted redacted redacted `421` situation".to_string();
         assert_eq!(actual, expected);
     }
 
@@ -75,7 +75,7 @@ mod tests {
     fn test_hyperlinks() {
         let input = "This string includes a [https://hyperlink.com.au](https://hyperlink.com.au)".to_string();
         let actual = slackify(input);
-        let expected = "This string includes a https://hyperlink.com.au\n".to_string();
+        let expected = "This string includes a https://hyperlink.com.au".to_string();
         assert_eq!(actual, expected);
     }
 
