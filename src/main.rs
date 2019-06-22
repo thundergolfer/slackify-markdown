@@ -75,6 +75,22 @@ mod tests {
     }
 
     #[test]
+    fn test_hyperlinks() {
+        let input = "This string includes a [https://hyperlink.com.au](https://hyperlink.com.au)".to_string();
+        let actual = slackify(input);
+        let expected = "This string includes a https://hyperlink.com.au\n".to_string();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_hyperlink_two() {
+        let input = "The 44th President was [Barack Obama](https://en.wikipedia.org/wiki/Barack_Obama).".to_string();
+        let actual = slackify(input);
+        let expected = "The 44th President was Barack Obama.\n";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
     fn test_list_subitem_formatting() {
         let input = "- ⌗ redacted redacted redacted redacted redacted
 - 📅 Morning meeting with Tom and Jerry about A Thing

@@ -273,8 +273,9 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             Tag::Emphasis => self.write("_"),
             Tag::Strong => self.write("*"),
             Tag::Strikethrough => self.write("~"),
-            Tag::Link(_link_type, dest, _title) => {
-                escape_href(&mut self.writer, &dest)?;
+            Tag::Link(_link_type, _dest, _title) => {
+                // Don't write anything. We only want to write the hyperlink's text,
+                // not the link itself.
                 Ok(())
             }
             Tag::Image(_link_type, dest, title) => {
