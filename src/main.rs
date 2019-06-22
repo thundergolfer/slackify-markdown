@@ -83,7 +83,20 @@ mod tests {
     fn test_hyperlink_two() {
         let input = "The 44th President was [Barack Obama](https://en.wikipedia.org/wiki/Barack_Obama).".to_string();
         let actual = slackify(input);
-        let expected = "The 44th President was Barack Obama.\n";
+        let expected = "The 44th President was Barack Obama.";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_quote_formatting() {
+        let input = "The following is a quote:
+> Education is a system of imposed ignorance. - N. Chomsky
+The end.".to_string();
+        let expected = "The following is a quote:
+> Education is a system of imposed ignorance. - N. Chomsky
+The end.
+";
+        let actual = slackify(input);
         assert_eq!(actual, expected);
     }
 
@@ -111,18 +124,6 @@ mod tests {
 
 • Got heads-up from redacted redacted redacted redacted redacted redacted
     • redacted redacted redacted redacted redacted redacted redacted errors.\n\n".to_string();
-        assert_eq!(actual, expected);
-    }
-
-    #[test]
-    fn test_tables() {
-        let input = "The following is a table:\
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |".to_string();
-        let actual = slackify(input);
-        let expected = "Abc";
         assert_eq!(actual, expected);
     }
 }

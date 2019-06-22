@@ -167,7 +167,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 if self.end_newline {
                     self.write("")
                 } else {
-                    self.write("\n")
+                    self.write(" ")
                 }
             }
             Tag::Rule => {
@@ -188,9 +188,9 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             }
             Tag::BlockQuote => {
                 if self.end_newline {
-                    self.write("<blockquote>\n")
+                    self.write(">")
                 } else {
-                    self.write("\n<blockquote>\n")
+                    self.write("\n>")
                 }
             }
             Tag::CodeBlock(_info) => {
