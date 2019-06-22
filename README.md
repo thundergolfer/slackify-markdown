@@ -18,3 +18,11 @@ Convert markdown into Slack's bastardized markdown
 ## Installation
 
 `coming soon`
+
+
+## Development
+
+### Releasing
+
+TravisCI is used to release _Linux_ and _OSX_ binaries each time a **tagged** commit is pushed to `master`.
+ 
