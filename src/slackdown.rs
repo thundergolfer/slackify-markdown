@@ -1,13 +1,13 @@
 //! Slack-flavored markdown (Slackdown) renderer that takes an iterator of events as input.
 
 use std::collections::HashMap;
-use std::io::{self, Write, ErrorKind};
 use std::fmt::{Arguments, Write as FmtWrite};
+use std::io::{self, ErrorKind, Write};
 
-use crate::escape::{escape_html, escape_href};
+use crate::escape::{escape_href, escape_html};
 
-use pulldown_cmark::{Event, CowStr, Tag};
 use pulldown_cmark::Event::*;
+use pulldown_cmark::{CowStr, Event, Tag};
 
 struct SlackdownWriter<'a, I, W> {
     /// Iterator supplying events.
@@ -39,7 +39,8 @@ pub(crate) trait StrWrite {
 }
 
 impl<W> StrWrite for WriteWrapper<W>
-    where W: Write
+where
+    W: Write,
 {
     #[inline]
     fn write_str(&mut self, s: &str) -> io::Result<()> {
@@ -67,7 +68,8 @@ impl<'w> StrWrite for String {
 }
 
 impl<W> StrWrite for &'_ mut W
-    where W: StrWrite
+where
+    W: StrWrite,
 {
     #[inline]
     fn write_str(&mut self, s: &str) -> io::Result<()> {
@@ -80,11 +82,10 @@ impl<W> StrWrite for &'_ mut W
     }
 }
 
-
 impl<'a, I, W> SlackdownWriter<'a, I, W>
-    where
-        I: Iterator<Item = Event<'a>>,
-        W: StrWrite,
+where
+    I: Iterator<Item = Event<'a>>,
+    W: StrWrite,
 {
     fn new(iter: I, writer: W) -> Self {
         Self {
@@ -92,7 +93,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
             writer,
             end_newline: true,
             numbers: HashMap::new(),
-            unordered_list_indent_lvl: 0
+            unordered_list_indent_lvl: 0,
         }
     }
 
@@ -170,9 +171,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                     self.write(" ")
                 }
             }
-            Tag::Rule => {
-                Ok(())
-            }
+            Tag::Rule => Ok(()),
             Tag::Header(_level) => {
                 // Slack doesn't support headers, so just make bold.
                 if self.end_newline {
@@ -224,7 +223,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 }
             }
             Tag::Item => {
-                let tabs = "    ".repeat(self.unordered_list_indent_lvl-1);
+                let tabs = "    ".repeat(self.unordered_list_indent_lvl - 1);
                 self.write(&tabs).unwrap();
                 if self.end_newline {
                     self.write("• ")
@@ -264,7 +263,7 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
                 write!(&mut self.writer, "{}", number)?;
                 self.write("</sup>")
             }
-            Tag::HtmlBlock => Ok(())
+            Tag::HtmlBlock => Ok(()),
         }
     }
 
@@ -348,16 +347,16 @@ impl<'a, I, W> SlackdownWriter<'a, I, W>
 }
 
 pub fn push_slackdown<'a, I>(s: &mut String, iter: I)
-    where
-        I: Iterator<Item = Event<'a>>,
+where
+    I: Iterator<Item = Event<'a>>,
 {
     SlackdownWriter::new(iter, s).run().unwrap();
 }
 
 pub fn write_slackdown<'a, I, W>(writer: W, iter: I) -> io::Result<()>
-    where
-        I: Iterator<Item = Event<'a>>,
-        W: Write,
+where
+    I: Iterator<Item = Event<'a>>,
+    W: Write,
 {
     SlackdownWriter::new(iter, WriteWrapper(writer)).run()
 }

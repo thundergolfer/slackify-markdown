@@ -2,9 +2,8 @@ extern crate slackify_markdown;
 
 use slackify_markdown::slackdown;
 
-use pulldown_cmark::{Parser, Options};
+use pulldown_cmark::{Options, Parser};
 use std::io::{self, Read};
-
 
 fn get_sdtin() -> io::Result<String> {
     let mut buffer = String::new();
@@ -73,7 +72,8 @@ mod tests {
 
     #[test]
     fn test_hyperlinks() {
-        let input = "This string includes a [https://hyperlink.com.au](https://hyperlink.com.au)".to_string();
+        let input = "This string includes a [https://hyperlink.com.au](https://hyperlink.com.au)"
+            .to_string();
         let actual = slackify(input);
         let expected = "This string includes a https://hyperlink.com.au".to_string();
         assert_eq!(actual, expected);
@@ -81,7 +81,9 @@ mod tests {
 
     #[test]
     fn test_hyperlink_two() {
-        let input = "The 44th President was [Barack Obama](https://en.wikipedia.org/wiki/Barack_Obama).".to_string();
+        let input =
+            "The 44th President was [Barack Obama](https://en.wikipedia.org/wiki/Barack_Obama)."
+                .to_string();
         let actual = slackify(input);
         let expected = "The 44th President was Barack Obama.";
         assert_eq!(actual, expected);
@@ -91,7 +93,8 @@ mod tests {
     fn test_quote_formatting() {
         let input = "The following is a quote:
 > Education is a system of imposed ignorance. - N. Chomsky
-The end.".to_string();
+The end."
+            .to_string();
         let expected = "The following is a quote:
 > Education is a system of imposed ignorance. - N. Chomsky
 The end.
@@ -111,7 +114,8 @@ The end.
     - Sub-item 1
     - Sub-item 2
 - Got heads-up from redacted redacted redacted redacted redacted redacted
-    - redacted redacted redacted redacted redacted redacted redacted errors.".to_string();
+    - redacted redacted redacted redacted redacted redacted redacted errors."
+            .to_string();
         let actual = slackify(input);
         let expected = "• ⌗ redacted redacted redacted redacted redacted
 • 📅 Morning meeting with Tom and Jerry about A Thing
@@ -123,7 +127,8 @@ The end.
     • Sub-item 2
 
 • Got heads-up from redacted redacted redacted redacted redacted redacted
-    • redacted redacted redacted redacted redacted redacted redacted errors.\n\n".to_string();
+    • redacted redacted redacted redacted redacted redacted redacted errors.\n\n"
+            .to_string();
         assert_eq!(actual, expected);
     }
 }
