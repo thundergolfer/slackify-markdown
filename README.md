@@ -15,9 +15,22 @@ Convert markdown into Slack's bastardized markdown
 ... and paste it into Slack!
 
 
-## Installation
+## Install
 
-`coming soon`
+#### Homebrew
+
+Easiest way to install on macOS is by using [Homebrew](https://brew.sh/).
+
+```
+$ brew tap thundergolfer/homebrew-formulae
+$ brew install slackify-markdown
+```
+
+#### Manual Installation
+
+You can get binaries for OSX and Linux on this project's [releases page](https://github.com/thundergolfer/slackify-markdown/releases).
+
+After downloading, you unzip the `.tar.gz` and move the binary to a place that's on your path (`$PATH` on Linux/OSX).
 
 
 ## Development
