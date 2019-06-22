@@ -5,3 +5,29 @@ rust:
   - nightly
 
 
+GH_TOKEN: &GH_TOKEN
+  secure: "gZMHBHCsRqKwHypVEiOMYm5A7ZpYHik9E7zeqEVDj82t+i/VCh6GhJ1AeqmChU1YwZLZno8jg4fAxQDdO5J++/of0Uz23MB4nyMfLIFWkH4XBjvSqvT+vNJx83fK+uY8FSSeiWDeOwWnINlqh1mMGhA+V1GC99Oeoez8hP9yUNsYP3KrDsdyRVbEygZg3XU0NZWeKAIfiMTwZj4FHSYaYMqiaGRiDKEpnUxnbT0R6CTroPSUTiMq88SWz7FcWcW4nT+1pSjvPcaUgHVs9PrTv1yhbsCza/FlfopIMT4zWnTYBcDh1fALr32uKzGH33w2POk+BhuG6nLIHppY7SKt9n9RF/CvuBfB0PGYgXa+bqU54ZfOA1j0R9b07cXJDCYMpEoNVlLFI1kFi2KQUwgYM8VoD/VguAoGPDdcBlJm8mS3rT5/ztgnvgdWOT959lE7bY4FmlP1oZGKKyYlrG7sAl5A35blyEWUdboM0q3NZajzSPhe1ZPgmOXcM0sPV38/b+k6Bp7n8f43eh+ZVCpGkUzgdLsvdKalYmR5rrIatTv5bAH/7wYfgXrjSAcqyVslHWlRAKSFR8lkTftK3dQWjmkyJvu62BfyCGFQjA0hugAwjQI6415gQ+kGAvIg4MI4S8/XvLvBQtVXay2jgrwfaTl7Q2m3xEbRAJd72quNjKM="
+
+# Cache `cargo install`ed tools, but don't cache the project's `target`
+# directory (which ends up over-caching and filling all disk space!)
+cache:
+  directories:
+    - /home/travis/.cargo
+
+DEPLOY_TO_GITHUB: &DEPLOY_TO_GITHUB
+  before_deploy:
+    - git config --local user.name "Jonathon Belotti"
+    - git config --local user.email "jonathon.i.belotti@gmail.com"
+    - name="slackify-markdown-$TRAVIS_TAG-$TARGET"
+    - mkdir $name
+    - cp target/$TARGET/release/slackify-markdown $name/
+    - cp README.md LICENSE-MIT LICENSE-APACHE $name/
+    - tar czvf $name.tar.gz $name
+  deploy:
+    provider: releases
+    api_key: *GH_TOKEN
+    file: slackify-markdown-$TRAVIS_TAG-$TARGET.tar.gz
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
