@@ -2,7 +2,7 @@
 
 Convert markdown into Slack's bastardized markdown
 
-> ⚠️ **Warning:** This is my first Rust and it's an awful, hacky thing (but functional, atleast).
+> ⚠️ **Warning:** This is my first Rust project and it's an awful, hacky thing (but functional, atleast).
 
 ----
 
