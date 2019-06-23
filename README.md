@@ -8,11 +8,18 @@ Convert markdown into Slack's bastardized markdown
 
 ## Usage 
 
+#### From your clipboard ✅
+
 `CTRL-V` Copy the markdown you want converted to your clipboard. Then...
 
-* **Mac OSX** -> `pbpaste | slackify-md | pbcopy`
+* **Mac OSX** -> `pbpaste | slackify-markdown | pbcopy`
 
 ... and paste it into Slack!
+
+#### From your terminal
+
+If you don't pipe anything to `slackify-markdown`, it will read everything you type into the terminal
+until you hit `CTRL` + `D`, and then it will convert. 
 
 
 ## Install
