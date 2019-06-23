@@ -14,7 +14,6 @@ struct Cli {
     file: Option<PathBuf>,
 }
 
-
 fn get_sdtin() -> io::Result<String> {
     let mut buffer = String::new();
     io::stdin().read_to_string(&mut buffer)?;
@@ -37,7 +36,7 @@ fn main() {
 
     let input = match args.file {
         Some(path) => std::fs::read_to_string(&path),
-        None => get_sdtin()
+        None => get_sdtin(),
     };
 
     match input {
