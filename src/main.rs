@@ -4,6 +4,16 @@ use slackify_markdown::slackdown;
 
 use pulldown_cmark::{Options, Parser};
 use std::io::{self, Read};
+use std::path::PathBuf;
+use structopt::StructOpt;
+
+#[derive(StructOpt)]
+struct Cli {
+    #[structopt(short = "f", parse(from_os_str))]
+    /// Path to a file containing markdown. Input taken from stdin if omitted.
+    file: Option<PathBuf>,
+}
+
 
 fn get_sdtin() -> io::Result<String> {
     let mut buffer = String::new();
@@ -23,7 +33,13 @@ fn slackify(markdown_input: String) -> String {
 }
 
 fn main() {
-    let input = get_sdtin();
+    let args = Cli::from_args();
+
+    let input = match args.file {
+        Some(path) => std::fs::read_to_string(&path),
+        None => get_sdtin()
+    };
+
     match input {
         Err(e) => println!("error receiving input: {:?}", e),
         Ok(str) => {
