@@ -129,6 +129,17 @@ The end.
     }
 
     #[test]
+    fn test_ordered_lists() {
+        let input = "1. This is the first item
+2. This is the 2nd item".to_string();
+        let expected = "1. This is the first item
+2. This is the 2nd item\n".to_string();
+        let actual = slackify(input);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
     fn test_list_subitem_formatting() {
         let input = "- ⌗ redacted redacted redacted redacted redacted
 - 📅 Morning meeting with Tom and Jerry about A Thing

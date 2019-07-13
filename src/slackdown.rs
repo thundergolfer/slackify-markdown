@@ -60,7 +60,11 @@ struct SlackdownWriter<'a, I, W> {
     end_newline: bool,
 
     /// Used to properly indent sub-lists
-    unordered_list_indent_lvl: usize,
+    list_indent_lvl: usize,
+    /// Used to determine when converting ordered list, and
+    /// correctly number each item. 0 means not converting ordered list,
+    /// but instead doing unordered.
+    curr_ordered_list_item_num: usize,
     numbers: HashMap<CowStr<'a>, usize>,
 }
 
@@ -133,7 +137,8 @@ where
             writer,
             end_newline: true,
             numbers: HashMap::new(),
-            unordered_list_indent_lvl: 0,
+            list_indent_lvl: 0,
+            curr_ordered_list_item_num: 0,
         }
     }
 
@@ -164,7 +169,7 @@ where
                     self.end_tag(tag)?;
                 }
                 Text(text) => {
-                    self.writer.write_str(&text);
+                    self.writer.write_str(&text)?;
                     self.end_newline = text.ends_with('\n');
                 }
                 Code(text) => {
@@ -239,23 +244,16 @@ where
                 self.write("```")
             }
             Tag::List(Some(1)) => {
-                if self.end_newline {
-                    self.write("<ol>\n")
-                } else {
-                    self.write("\n<ol>\n")
-                }
+                self.list_indent_lvl += 1;
+                self.curr_ordered_list_item_num += 1;
+                Ok(())
             }
             Tag::List(Some(start)) => {
-                if self.end_newline {
-                    self.write("<ol start=\"")?;
-                } else {
-                    self.write("\n<ol start=\"")?;
-                }
-                write!(&mut self.writer, "{}", start)?;
-                self.write("\">\n")
+                self.curr_ordered_list_item_num = start;
+                Ok(())
             }
             Tag::List(None) => {
-                self.unordered_list_indent_lvl += 1;
+                self.list_indent_lvl += 1;
                 if self.end_newline {
                     self.write("")
                 } else {
@@ -263,10 +261,10 @@ where
                 }
             }
             Tag::Item => {
-                let tabs = "    ".repeat(self.unordered_list_indent_lvl - 1);
+                let tabs = "    ".repeat(self.list_indent_lvl - 1);
                 self.write(&tabs).unwrap();
-                if self.end_newline {
-                    self.write("• ")
+                if self.curr_ordered_list_item_num > 0 {
+                    self.write(&format!("{}. ", self.curr_ordered_list_item_num))
                 } else {
                     self.write("• ")
                 }
@@ -325,14 +323,17 @@ where
                 self.write("```\n")?;
             }
             Tag::List(Some(_)) => {
-                self.write("</ol>\n")?;
+                self.curr_ordered_list_item_num = 0;
             }
             Tag::List(None) => {
-                self.unordered_list_indent_lvl -= 1;
+                self.list_indent_lvl -= 1;
                 self.write("")?;
             }
             Tag::Item => {
                 self.write("\n")?;
+                if self.curr_ordered_list_item_num > 0 {
+                    self.curr_ordered_list_item_num += 1;
+                }
             }
             Tag::Emphasis => {
                 self.write("_")?;
