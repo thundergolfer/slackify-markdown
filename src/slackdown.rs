@@ -44,7 +44,7 @@ use std::collections::HashMap;
 use std::fmt::{Arguments, Write as FmtWrite};
 use std::io::{self, ErrorKind, Write};
 
-use crate::escape::{escape_href, escape_html};
+use crate::escape::escape_href;
 
 use pulldown_cmark::Event::*;
 use pulldown_cmark::{CowStr, Event, Tag};
@@ -156,7 +156,7 @@ where
     /// Writes a new line.
     fn write_newline(&mut self) -> io::Result<()> {
         self.end_newline = true;
-        self.writer.write_str("\n")
+        self.write("\n")
     }
 
     pub fn run(mut self) -> io::Result<()> {
@@ -174,7 +174,7 @@ where
                 }
                 Code(text) => {
                     self.write("`")?;
-                    escape_html(&mut self.writer, &text)?;
+                    self.write(&text)?;
                     self.write("`")?;
                 }
                 Html(html) | InlineHtml(html) => {
@@ -189,7 +189,7 @@ where
                 FootnoteReference(name) => {
                     let len = self.numbers.len() + 1;
                     self.write("<sup class=\"footnote-reference\"><a href=\"#")?;
-                    escape_html(&mut self.writer, &name)?;
+                    self.write(&name)?;
                     self.write("\">")?;
                     let number = *self.numbers.entry(name).or_insert(len);
                     write!(&mut self.writer, "{}", number)?;
@@ -284,17 +284,18 @@ where
                 self.raw_text()?;
                 if !title.is_empty() {
                     self.write("\" title=\"")?;
-                    escape_html(&mut self.writer, &title)?;
+                    self.write(&title)?;
                 }
                 self.write("\" />")
             }
             Tag::FootnoteDefinition(name) => {
+                // TODO(Jonathon): Decide how to handle these
                 if self.end_newline {
                     self.write("<div class=\"footnote-definition\" id=\"")?;
                 } else {
                     self.write("\n<div class=\"footnote-definition\" id=\"")?;
                 }
-                escape_html(&mut self.writer, &*name)?;
+                self.write(&*name)?;
                 self.write("\"><sup class=\"footnote-definition-label\">")?;
                 let len = self.numbers.len() + 1;
                 let number = *self.numbers.entry(name).or_insert(len);
@@ -368,7 +369,7 @@ where
                 }
                 Html(_) => (),
                 InlineHtml(text) | Code(text) | Text(text) => {
-                    escape_html(&mut self.writer, &text)?;
+                    self.write(&text)?;
                     self.end_newline = text.ends_with('\n');
                 }
                 SoftBreak | HardBreak => {

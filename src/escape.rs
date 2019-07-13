@@ -93,59 +93,6 @@ where
     w.write_str(&s[mark..])
 }
 
-static HTML_ESCAPE_TABLE: [u8; 256] = [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 4, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-];
-
-static HTML_ESCAPES: [&'static str; 5] = ["", "&quot;", "&amp;", "&lt;", "&gt;"];
-
-/// Writes the given string to the Write sink, replacing special HTML bytes
-/// (<, >, &, ") by escape sequences.
-pub(crate) fn escape_html<W: StrWrite>(w: W, s: &str) -> io::Result<()> {
-    #[cfg(all(target_arch = "x86_64", feature = "simd"))]
-    {
-        simd::escape_html(w, s)
-    }
-    #[cfg(not(all(target_arch = "x86_64", feature = "simd")))]
-    {
-        escape_html_scalar(w, s)
-    }
-}
-
-fn escape_html_scalar<W: StrWrite>(mut w: W, s: &str) -> io::Result<()> {
-    let bytes = s.as_bytes();
-    let mut mark = 0;
-    let mut i = 0;
-    while i < s.len() {
-        match bytes[i..]
-            .iter()
-            .position(|&c| HTML_ESCAPE_TABLE[c as usize] != 0)
-        {
-            Some(pos) => {
-                i += pos;
-            }
-            None => break,
-        }
-        let c = bytes[i];
-        let escape = HTML_ESCAPE_TABLE[c as usize];
-        if escape != 0 {
-            let escape_seq = HTML_ESCAPES[escape as usize];
-            w.write_str(&s[mark..i])?;
-            w.write_str(escape_seq)?;
-            mark = i + 1; // all escaped characters are ASCII
-        }
-        i += 1;
-    }
-    w.write_str(&s[mark..])
-}
-
 #[cfg(all(target_arch = "x86_64", feature = "simd"))]
 mod simd {
     use crate::html::StrWrite;
