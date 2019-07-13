@@ -121,7 +121,9 @@ The end.
     // Tests for regression on https://github.com/thundergolfer/slackify-markdown/issues/6
     #[test]
     fn test_quote_chars_formatting() {
-        let input = "- Friday was a bit disrupted by \"Permissions pain 😭\", so today I will still be ...".to_string();
+        let input =
+            "- Friday was a bit disrupted by \"Permissions pain 😭\", so today I will still be ..."
+                .to_string();
         let expected = "• Friday was a bit disrupted by \"Permissions pain 😭\", so today I will still be ...\n".to_string();
         let actual = slackify(input);
 
@@ -131,9 +133,11 @@ The end.
     #[test]
     fn test_ordered_lists() {
         let input = "1. This is the first item
-2. This is the 2nd item".to_string();
+2. This is the 2nd item"
+            .to_string();
         let expected = "1. This is the first item
-2. This is the 2nd item\n".to_string();
+2. This is the 2nd item\n"
+            .to_string();
         let actual = slackify(input);
 
         assert_eq!(actual, expected);
