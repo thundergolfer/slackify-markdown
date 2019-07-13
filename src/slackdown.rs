@@ -164,7 +164,7 @@ where
                     self.end_tag(tag)?;
                 }
                 Text(text) => {
-                    escape_html(&mut self.writer, &text)?;
+                    self.writer.write_str(&text);
                     self.end_newline = text.ends_with('\n');
                 }
                 Code(text) => {

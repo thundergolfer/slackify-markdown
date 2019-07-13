@@ -118,6 +118,16 @@ The end.
         assert_eq!(actual, expected);
     }
 
+    // Tests for regression on https://github.com/thundergolfer/slackify-markdown/issues/6
+    #[test]
+    fn test_quote_chars_formatting() {
+        let input = "- Friday was a bit disrupted by \"Permissions pain 😭\", so today I will still be ...".to_string();
+        let expected = "• Friday was a bit disrupted by \"Permissions pain 😭\", so today I will still be ...\n".to_string();
+        let actual = slackify(input);
+
+        assert_eq!(actual, expected);
+    }
+
     #[test]
     fn test_list_subitem_formatting() {
         let input = "- ⌗ redacted redacted redacted redacted redacted
